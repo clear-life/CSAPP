@@ -134,7 +134,7 @@ NOTES:
 
 
 #endif
-//1
+//s
 /* 
  * bitXor - x^y using only ~ and & 
  *   Example: bitXor(4, 5) = 1
@@ -143,7 +143,7 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  return ~(x & y) & ~(~x & ~y);
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -152,9 +152,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
-
+  return 1 << 31;
 }
 //2
 /*
@@ -165,7 +163,7 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return 2;
+  return !~((x + 1) ^ x) & !!~x;
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -176,7 +174,10 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return 2;
+	int a = 0xAA;
+	int b = (a << 8) ^ a;
+	int c = (b << 16) ^ b;
+  return !(c & x ^ c);
 }
 /* 
  * negate - return -x 
@@ -186,7 +187,7 @@ int allOddBits(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x + 1;
 }
 //3
 /* 
@@ -198,8 +199,15 @@ int negate(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
+/*
 int isAsciiDigit(int x) {
-  return 2;
+  return !(x & ~0xf ^ 0x30) & (!(x & 0x6) | !(x >> 3 & 1));
+}
+*/
+int isAsciiDigit(int x) {
+	int low = x + (~0x30 + 1);
+	int up = 0x39 + (~x + 1);
+  return !(low >> 31) & !(up >> 31);
 }
 /* 
  * conditional - same as x ? y : z 
@@ -219,7 +227,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  return ((x + ~y + 1) >> 31 & 1 | !(x ^ y) | (x >> 31) & !(y >> 31) & 1 ) & ((!(x >> 31) & (y >> 31));
 }
 //4
 /* 
